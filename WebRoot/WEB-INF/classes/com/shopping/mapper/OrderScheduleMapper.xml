@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shopping.dao.OrderScheduleMapper" >
+  <resultMap id="BaseResultMap" type="com.shopping.pojo.OrderSchedule" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="productid" property="productid" jdbcType="INTEGER" />
+    <result column="taste" property="taste" jdbcType="INTEGER" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+    <result column="orderId" property="orderid" jdbcType="INTEGER" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, productid, taste, num, orderId, created_by, created_date, last_update_by, last_update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_schedule
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from order_schedule
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.shopping.pojo.OrderSchedule" >
+    insert into order_schedule (id, productid, taste, 
+      num, orderId, created_by, 
+      created_date, last_update_by, last_update_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{productid,jdbcType=INTEGER}, #{taste,jdbcType=INTEGER}, 
+      #{num,jdbcType=INTEGER}, #{orderid,jdbcType=INTEGER}, #{createdBy,jdbcType=VARCHAR}, 
+      #{createdDate,jdbcType=TIMESTAMP}, #{lastUpdateBy,jdbcType=VARCHAR}, #{lastUpdateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.shopping.pojo.OrderSchedule" >
+    insert into order_schedule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="productid != null" >
+        productid,
+      </if>
+      <if test="taste != null" >
+        taste,
+      </if>
+      <if test="num != null" >
+        num,
+      </if>
+      <if test="orderid != null" >
+        orderId,
+      </if>
+      <if test="createdBy != null" >
+        created_by,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by,
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="productid != null" >
+        #{productid,jdbcType=INTEGER},
+      </if>
+      <if test="taste != null" >
+        #{taste,jdbcType=INTEGER},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null" >
+        #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.shopping.pojo.OrderSchedule" >
+    update order_schedule
+    <set >
+      <if test="productid != null" >
+        productid = #{productid,jdbcType=INTEGER},
+      </if>
+      <if test="taste != null" >
+        taste = #{taste,jdbcType=INTEGER},
+      </if>
+      <if test="num != null" >
+        num = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null" >
+        orderId = #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null" >
+        created_by = #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectProductPojoByOrderId" parameterType="java.lang.Integer" resultType="com.shopping.bean.ProductPojo">
+  select 
+  os.productid as productid, os.num as num,
+  p.product_name as productName, p.product_picture_mid as pic, p.price as price,
+  t.name as tasteName,t.id as tasteid
+  from order_schedule as os, product as p, `taste` as t
+  where os.productid=p.id and os.taste=t.id and os.orderId=#{orderid}
+  </select>
+  
+  <select id="selectOrderScheduleByOrderId" parameterType="java.lang.Integer" resultType="com.shopping.pojo.OrderSchedule">
+  select 
+  <include refid="Base_Column_List" />
+    from order_schedule
+    where orderId = #{orderid,jdbcType=INTEGER}
+  </select>
+</mapper>

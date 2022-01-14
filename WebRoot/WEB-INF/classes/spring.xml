@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+							http://www.springframework.org/schema/beans/spring-beans.xsd   
+							http://www.springframework.org/schema/aop   
+							http://www.springframework.org/schema/aop/spring-aop.xsd   
+							http://www.springframework.org/schema/tx   
+							http://www.springframework.org/schema/tx/spring-tx.xsd   
+							http://www.springframework.org/schema/context   
+							http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- beans,aop,tx,context -->
+	<context:property-placeholder location="classpath:jdbc.properties" />
+	<!-- DateSoure 集成MyBatis,Hibernate 开启事务 指定事务的通知方式 配置切面 -->
+
+	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+
+	<!-- Spring扫描所有的mapper文件 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- Mappper所在的包路径 -->
+		<property name="mapperLocations" value="classpath:com/shopping/mapper/*.xml" />
+	</bean>
+	<!-- Spring 扫描DAO包 -->
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- DAO包所在的包路径 -->
+		<property name="basePackage" value="com.shopping.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+     <property name="maxUploadSize" value="104857600" />
+     <property name="maxInMemorySize" value="4096" />
+     <property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="find*" propagation="SUPPORTS" />
+			<tx:method name="*" propagation="SUPPORTS" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+		<!-- 事务入口（Service的包路径） -->
+		<aop:pointcut id="transactionPointcut" expression="execution(* com.admin.service.*.*(..))" />
+		<aop:pointcut id="transactionPointcut" expression="execution(* com.shopping.service.*.*(..))" />
+		<!-- 将事务通知与切入点组合 -->
+		<aop:advisor pointcut-ref="transactionPointcut" advice-ref="txAdvice" />
+	</aop:config>
+
+</beans>

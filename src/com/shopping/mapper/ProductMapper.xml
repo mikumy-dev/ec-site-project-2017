@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shopping.dao.ProductMapper">
+	<resultMap id="BaseResultMap" type="com.shopping.pojo.Product">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="product_name" property="productName" jdbcType="VARCHAR" />
+		<result column="product_picture_big" property="productPictureBig"
+			jdbcType="VARCHAR" />
+		<result column="product_picture_mid" property="productPictureMid"
+			jdbcType="VARCHAR" />
+		<result column="product_picture_small" property="productPictureSmall"
+			jdbcType="VARCHAR" />
+		<result column="product_details_picture" property="productDetailsPicture"
+			jdbcType="VARCHAR" />
+		<result column="product_type" property="productType" jdbcType="INTEGER" />
+		<result column="material_addr" property="materialAddr"
+			jdbcType="VARCHAR" />
+		<result column="produce_addr" property="produceAddr" jdbcType="VARCHAR" />
+		<result column="ingredients" property="ingredients" jdbcType="VARCHAR" />
+		<result column="specifications" property="specifications"
+			jdbcType="INTEGER" />
+		<result column="expiration_time" property="expirationTime"
+			jdbcType="VARCHAR" />
+		<result column="standard_no" property="standardNo" jdbcType="VARCHAR" />
+		<result column="production_license" property="productionLicense"
+			jdbcType="VARCHAR" />
+		<result column="storage" property="storage" jdbcType="VARCHAR" />
+		<result column="edible_methods" property="edibleMethods"
+			jdbcType="VARCHAR" />
+		<result column="inventory" property="inventory" jdbcType="INTEGER" />
+		<result column="price" property="price" jdbcType="DOUBLE" />
+		<result column="sales_volume" property="salesVolume" jdbcType="INTEGER" />
+		<result column="good_comment_ratio" property="goodCommentRatio" />
+		<result column="tasteid" property="tasteid" jdbcType="VARCHAR" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+		<result column="last_update_by" property="lastUpdateBy"
+			jdbcType="VARCHAR" />
+		<result column="last_update_date" property="lastUpdateDate"
+			jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.shopping.pojo.Product"
+		extends="BaseResultMap">
+		<result column="product_details" property="productDetails"
+			jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, product_name, product_picture_big, product_picture_mid,
+		product_picture_small,
+		product_details_picture, product_type,
+		material_addr, produce_addr, ingredients,
+		specifications,
+		expiration_time, standard_no, production_license,
+		storage,
+		edible_methods,
+		inventory, price,
+		sales_volume,good_comment_ratio,tasteid, created_by,
+		created_date,
+		last_update_by, last_update_date
+	</sql>
+	<sql id="Blob_Column_List">
+		product_details
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from product
+		where id = #{id,jdbcType=INTEGER} and status='Y'
+	</select>
+
+	<select id="findSelling" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		where status='Y'
+		ORDER BY sales_volume DESC
+		LIMIT 0,6
+	</select>
+
+	<select id="findNewest" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		where status='Y'
+		ORDER BY created_date DESC
+		LIMIT 0,10
+	</select>
+
+	<update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		UPDATE product set
+		status='N' where id= #{id,jdbcType=INTEGER}
+	</update>
+
+	<insert id="insertSelective" parameterType="com.shopping.pojo.Product">
+		insert into product
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="productName != null">
+				product_name,
+			</if>
+			<if test="productPictureBig != null">
+				product_picture_big,
+			</if>
+			<if test="productPictureMid != null">
+				product_picture_mid,
+			</if>
+			<if test="productPictureSmall != null">
+				product_picture_small,
+			</if>
+			<if test="productDetailsPicture != null">
+				product_details_picture,
+			</if>
+			<if test="productType != null">
+				product_type,
+			</if>
+			<if test="materialAddr != null">
+				material_addr,
+			</if>
+			<if test="produceAddr != null">
+				produce_addr,
+			</if>
+			<if test="ingredients != null">
+				ingredients,
+			</if>
+			<if test="specifications != null">
+				specifications,
+			</if>
+			<if test="expirationTime != null">
+				expiration_time,
+			</if>
+			<if test="standardNo != null">
+				standard_no,
+			</if>
+			<if test="productionLicense != null">
+				production_license,
+			</if>
+			<if test="storage != null">
+				storage,
+			</if>
+			<if test="edibleMethods != null">
+				edible_methods,
+			</if>
+			<if test="inventory != null">
+				inventory,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="tasteid != null">
+				tasteid,
+			</if>
+			<if test="createdBy != null">
+				created_by,
+			</if>
+			<if test="createdDate != null">
+				created_date,
+			</if>
+			<if test="lastUpdateBy != null">
+				last_update_by,
+			</if>
+			<if test="lastUpdateDate != null">
+				last_update_date,
+			</if>
+			<if test="productDetails != null">
+				product_details,
+			</if>
+			status,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="productName != null">
+				#{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="productPictureBig != null">
+				#{productPictureBig,jdbcType=VARCHAR},
+			</if>
+			<if test="productPictureMid != null">
+				#{productPictureMid,jdbcType=VARCHAR},
+			</if>
+			<if test="productPictureSmall != null">
+				#{productPictureSmall,jdbcType=VARCHAR},
+			</if>
+			<if test="productDetailsPicture != null">
+				#{productDetailsPicture,jdbcType=VARCHAR},
+			</if>
+			<if test="productType != null">
+				#{productType,jdbcType=INTEGER},
+			</if>
+			<if test="materialAddr != null">
+				#{materialAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="produceAddr != null">
+				#{produceAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="ingredients != null">
+				#{ingredients,jdbcType=VARCHAR},
+			</if>
+			<if test="specifications != null">
+				#{specifications,jdbcType=INTEGER},
+			</if>
+			<if test="expirationTime != null">
+				#{expirationTime,jdbcType=VARCHAR},
+			</if>
+			<if test="standardNo != null">
+				#{standardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="productionLicense != null">
+				#{productionLicense,jdbcType=VARCHAR},
+			</if>
+			<if test="storage != null">
+				#{storage,jdbcType=VARCHAR},
+			</if>
+			<if test="edibleMethods != null">
+				#{edibleMethods,jdbcType=VARCHAR},
+			</if>
+			<if test="inventory != null">
+				#{inventory,jdbcType=INTEGER},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DOUBLE},
+			</if>
+			<if test="tasteid != null">
+				#{tasteid,jdbcType=VARCHAR},
+			</if>
+			<if test="createdBy != null">
+				#{createdBy,jdbcType=VARCHAR},
+			</if>
+			<if test="createdDate != null">
+				#{createdDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lastUpdateBy != null">
+				#{lastUpdateBy,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateDate != null">
+				#{lastUpdateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="productDetails != null">
+				#{productDetails,jdbcType=LONGVARCHAR},
+			</if>
+			'Y',
+		</trim>
+	</insert>
+	<update id="updateByid" parameterType="com.shopping.pojo.Product">
+		update product set
+		inventory = inventory -#{inventory,jdbcType=INTEGER},
+		last_update_date=now()
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.shopping.pojo.Product">
+		update product
+		<set>
+			<if test="productName != null">
+				product_name = #{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="productPictureBig != null">
+				product_picture_big = #{productPictureBig,jdbcType=VARCHAR},
+			</if>
+			<if test="productPictureMid != null">
+				product_picture_mid = #{productPictureMid,jdbcType=VARCHAR},
+			</if>
+			<if test="productPictureSmall != null">
+				product_picture_small = #{productPictureSmall,jdbcType=VARCHAR},
+			</if>
+			<if test="productDetailsPicture != null">
+				product_details_picture =
+				#{productDetailsPicture,jdbcType=VARCHAR},
+			</if>
+			<if test="productType != null">
+				product_type = #{productType,jdbcType=INTEGER},
+			</if>
+			<if test="materialAddr != null">
+				material_addr = #{materialAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="produceAddr != null">
+				produce_addr = #{produceAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="ingredients != null">
+				ingredients = #{ingredients,jdbcType=VARCHAR},
+			</if>
+			<if test="specifications != null">
+				specifications = #{specifications,jdbcType=INTEGER},
+			</if>
+			<if test="expirationTime != null">
+				expiration_time = #{expirationTime,jdbcType=VARCHAR},
+			</if>
+			<if test="standardNo != null">
+				standard_no = #{standardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="productionLicense != null">
+				production_license = #{productionLicense,jdbcType=VARCHAR},
+			</if>
+			<if test="storage != null">
+				storage = #{storage,jdbcType=VARCHAR},
+			</if>
+			<if test="edibleMethods != null">
+				edible_methods = #{edibleMethods,jdbcType=VARCHAR},
+			</if>
+			<if test="inventory != null">
+				inventory = #{inventory,jdbcType=INTEGER},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DOUBLE},
+			</if>
+			<if test="tasteid != null">
+				tasteid = #{tasteid,jdbcType=VARCHAR},
+			</if>
+			<if test="createdBy != null">
+				created_by = #{createdBy,jdbcType=VARCHAR},
+			</if>
+			<if test="createdDate != null">
+				created_date = #{createdDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lastUpdateBy != null">
+				last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateDate != null">
+				last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="productDetails != null">
+				product_details = #{productDetails,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+
+	<select id="findProduct" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		where status='Y'
+		limit #{pageStart} ,#{pageSize}
+	</select>
+
+	<select id="findNum" resultType="int">
+		select count(id) from product where status='Y'
+	</select>
+
+	<select id="findNumBySearchCondition" parameterType="map"
+		resultType="int">
+		select count(id) from product
+		<trim prefix="where">
+			<if test="condition.productType!=null">product_type=#{condition.productType}</if>
+			<if test="condition.keyword!=null">product_name like concat('%',#{condition.keyword},'%')
+			</if>
+		</trim>
+		and status='Y'
+	</select>
+
+	<select id="findProductBySearchCondition" parameterType="map"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		<trim prefix="where">
+			<if test="condition.productType!=null">product_type=#{condition.productType}</if>
+			<if test="condition.keyword!=null">product_name like concat('%',#{condition.keyword},'%')
+			</if>
+		</trim>
+		and status='Y'
+		order by
+		<if
+			test="condition.orderByCondition=='id' or condition.orderByCondition==null">
+			id
+		</if>
+		<if test="condition.orderByCondition=='salesVolume'">
+			sales_volume desc
+		</if>
+		<if test="condition.orderByCondition=='price'">
+			price
+		</if>
+		<if test="condition.orderByCondition=='goodCommentRatio'">
+			good_comment_ratio desc
+		</if>
+		limit #{pageStart} ,#{pageSize}
+	</select>
+
+	<update id="updateGoodCommentRatio" parameterType="map">
+		update product set good_comment_ratio=#{goodCommentRatio} where id=#{id}
+	</update>
+
+	<select id="findProductInShopCart" parameterType="com.shopping.bean.ShopCartOnPage"
+		resultType="com.shopping.bean.ShopCartOnPage">
+		select
+		p.id as pid,
+		p.product_name as pname,
+		p.product_picture_mid as ppic,
+		p.price as price,
+		t.name as taste,
+		t.id as tasteid
+		from product as p, taste as t
+		where p.id=#{pid} and t.id=#{tasteid}
+	</select>
+</mapper>

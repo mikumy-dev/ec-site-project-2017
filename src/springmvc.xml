@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- 在核心配置文件中添加包扫描路径 -->
+	<context:component-scan base-package="com.shopping.controller" />
+	<context:component-scan base-package="com.shopping.service" />
+	<context:component-scan base-package="com.admin.controller" />
+	<context:component-scan base-package="com.admin.service" />
+	<!-- 使用springmvc的注解 -->
+	<mvc:annotation-driven />
+	<!-- 静态资源(css,js,img)不拦截 -->
+	<mvc:default-servlet-handler />
+	<!-- 配置视图解析方式 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+</beans>

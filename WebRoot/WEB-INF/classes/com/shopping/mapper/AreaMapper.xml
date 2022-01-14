@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shopping.dao.AreaMapper" >
+
+	<!-- by zz -->
+	
+	<select id="selectAreaByCityId" parameterType="int" resultType="com.shopping.pojo.Area">
+		SELECT a.areaid,a.area from areas a INNER JOIN 	cities c
+		on a.cityid = c.cityid and a.cityid =  #{cid}
+	</select>
+	
+	<select id="selectByAreaId" parameterType="string" resultType="com.shopping.pojo.Area">
+		SELECT  areaid, area 
+		from areas
+		where areaid = #{aid}
+	</select>
+</mapper>

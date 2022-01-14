@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shopping.dao.OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.shopping.pojo.Order" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="ordernum" property="ordernum" jdbcType="VARCHAR" />
+    <result column="turnover_time" property="turnoverTime" jdbcType="TIMESTAMP" />
+    <result column="addrid" property="addrid" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userid, ordernum, turnover_time, addrid, status, created_by, created_date, last_update_by, 
+    last_update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from `order`
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from `order`
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.shopping.pojo.Order" >
+    insert into `order` (id, userid, ordernum, 
+      turnover_time, addrid, status, 
+      created_by, created_date, last_update_by, 
+      last_update_date)
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{ordernum,jdbcType=VARCHAR}, 
+      #{turnoverTime,jdbcType=TIMESTAMP}, #{addrid,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, 
+      #{createdBy,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{lastUpdateBy,jdbcType=VARCHAR}, 
+      #{lastUpdateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.shopping.pojo.Order" >
+    insert into `order`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="ordernum != null" >
+        ordernum,
+      </if>
+      <if test="turnoverTime != null" >
+        turnover_time,
+      </if>
+      <if test="addrid != null" >
+        addrid,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createdBy != null" >
+        created_by,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by,
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="ordernum != null" >
+        #{ordernum,jdbcType=VARCHAR},
+      </if>
+      <if test="turnoverTime != null" >
+        #{turnoverTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addrid != null" >
+        #{addrid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.shopping.pojo.Order" >
+    update `order`
+    <set >
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="ordernum != null" >
+        ordernum = #{ordernum,jdbcType=VARCHAR},
+      </if>
+      <if test="turnoverTime != null" >
+        turnover_time = #{turnoverTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addrid != null" >
+        addrid = #{addrid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createdBy != null" >
+        created_by = #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+ 
+  <select id="insertOrderAndGetID" parameterType="com.shopping.pojo.Order" resultType="java.lang.Integer">
+  insert into `order` (userid,ordernum,status,created_date)
+  values (#{userid},#{ordernum},#{status},now());
+  select @@identity as id;
+  </select>
+  <select id="countOrderNumByUserId" parameterType="com.shopping.pojo.Order" resultType="java.lang.Double">
+  select count(id) from `order` where userid=#{userid}
+  <if test="status != null">
+   and status=#{status}
+   </if>
+  </select>
+  <select id="selectOrderPojoByUserId" resultType="com.shopping.bean.OrderPojo" parameterType="map">
+   select id as id,ordernum as orderNum,turnover_time as turnoverTime,status as status
+   from `order` where userid=#{order.userid}
+   <if test="order.status != null">
+   and status=#{order.status}
+   </if>
+   order by created_date desc
+   limit #{page.limitFrom},#{page.itemsOnPage}
+  </select>
+  <select id="selectOrderPojoById" resultType="com.shopping.bean.OrderPojo" parameterType="java.lang.Integer" >
+    select id as id,ordernum as orderNum,turnover_time as turnoverTime,status as status, addrid as addrid
+    from `order`
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <update id="updateStatus" parameterType="com.shopping.pojo.Order">
+		UPDATE `order` SET `status`=#{status}
+		<if test='status.equals("4")'>
+		,turnover_time=now()
+		</if>
+		 where id=#{id}
+</update>
+</mapper>

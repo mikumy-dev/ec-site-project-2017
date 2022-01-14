@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shopping.dao.ProvinceMapper" >
+
+	<!-- by zz -->
+
+	<select id="selectAll" resultType="com.shopping.pojo.Province">
+		select id,provinceid,province
+		from provinces
+	</select>
+	
+	<select id="selectById" parameterType="int" resultType="com.shopping.pojo.Province">
+		select id,provinceid,province
+		from provinces
+		where provinceid = #{id}
+	</select>
+
+</mapper>

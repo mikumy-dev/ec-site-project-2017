@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shopping.dao.OrderProductMapper">
+	<resultMap id="BaseResultMap" type="com.shopping.pojo.OrderProductPojo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="ordernum" property="orderNum" jdbcType="VARCHAR" />
+		<result column="realname" property="realname" jdbcType="VARCHAR" />
+		<result column="turnover_time" property="turnoverTime"
+			jdbcType="TIMESTAMP" />
+		<result column="addr" property="addr" jdbcType="VARCHAR" />
+		<result column="product_name" property="productName" jdbcType="VARCHAR" />
+		<result column="name" property="tasteName" jdbcType="VARCHAR" />
+		<result column="price" property="price" jdbcType="DOUBLE" />
+		<result column="num" property="num" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="findAllOrder" parameterType="map" resultMap="BaseResultMap">
+		select
+		o.id,
+		o.ordernum,
+		u.realname,
+		o.turnover_time,
+		p.product_name,
+		p.price ,
+		os.num,
+		o.status,
+		t.`name`,
+		a.addr
+		from `order` o,order_schedule os,product p ,taste t,user u,addr a
+		WHERE o.id=os.orderId and p.id=os.productid and os.taste=t.id and
+		o.userid=u.uid and o.addrid=a.id
+		 limit #{pageStart} ,#{pageSize} 
+	</select>
+	
+	<select id="findNum" resultType="int">
+		select
+		COUNT(o.id)
+		from `order` o,order_schedule os,product p ,taste t,user u,addr a
+		WHERE o.id=os.orderId and p.id=os.productid and os.taste=t.id and
+		o.userid=u.uid and o.addrid=a.id
+	</select>
+	
+	<update id="updateStatus" parameterType="int">
+		UPDATE `order` SET `status`='3' where id=#{id}
+	</update>
+</mapper>
